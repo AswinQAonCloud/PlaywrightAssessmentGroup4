@@ -1,4 +1,4 @@
-import { adminLocators } from './locators/admin.locators.js';
+import { adminLocators } from './locators/adminPage.locators.js';
 
 export class AdminPage {
   constructor(page) {

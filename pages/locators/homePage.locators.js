@@ -8,4 +8,5 @@ export const homeLocators = {
 
   roomCard: (page) => page.getByText('Single'),
   bookNow: (page) => page.getByRole('button', { name: 'Book now' }),
+  //test
 };
