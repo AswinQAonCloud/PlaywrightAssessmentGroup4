@@ -9,6 +9,8 @@ export const homeLocators = {
   roomCard: (page) => page.locator('.card'),
   roomCardByPrice: (page, price) => page.locator('.card').filter({ has: page.getByText(`£${price}`) }),
   bookNowBtn: (card) => card.getByRole('link', { name: 'Book now' }),
+  bookNowButtonLocator: (id) => `[href*="/reservation/${id}"]`,
+  priceRegex: (price) => new RegExp(`£\\s*${price}(\\.00)?`),
 
   bookNowButtonLocator: (id) => `[href*="/reservation/${id}"]`,
   priceRegex: (price) => new RegExp(`£\\s*${price}(\\.00)?`),  

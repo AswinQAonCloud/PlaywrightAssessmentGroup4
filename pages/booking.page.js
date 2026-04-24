@@ -1,3 +1,4 @@
+import { expect } from '@playwright/test';
 import { bookingLocators } from './locators/reservePage.locators.js';
 
 export class BookingPage {
@@ -8,6 +9,37 @@ export class BookingPage {
   extractAmount(text) {
     if (!text) return 0;
     return parseInt(text.replace(/[^\d]/g, ''), 10);
+  }
+
+  async hasBookingError() {
+    return await bookingLocators
+      .errorBox(this.page)
+      .isVisible()
+      .catch(() => false);
+  }
+  
+  async getBookingErrorText() {
+    return await bookingLocators.errorBox(this.page).innerText();
+  }
+
+  async expectBookingConfirmed() {
+    const confirm = bookingLocators.confirmMsg(this.page);
+    const errorBox = bookingLocators.errorBox(this.page);
+  
+    // Wait for either success OR error
+    await Promise.race([
+      confirm.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {}),
+      errorBox.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {}),
+    ]);
+  
+    // If error appears → fail clearly
+    if (await errorBox.isVisible().catch(() => false)) {
+      const err = await errorBox.innerText();
+      throw new Error(`Booking failed: ${err}`);
+    }
+  
+    // Otherwise assert success
+    await expect(confirm).toBeVisible();
   }
 
   async getTotalAmount() {

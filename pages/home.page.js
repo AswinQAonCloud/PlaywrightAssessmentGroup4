@@ -1,3 +1,4 @@
+import { expect } from '@playwright/test';
 import { homeLocators } from './locators/homePage.locators.js';
 
 export class HomePage {
@@ -15,9 +16,10 @@ export class HomePage {
     await this.page.waitForLoadState('networkidle');
   }
 
-  async clickBookNowByPrice(price) {
-    const card = homeLocators.roomCardByPrice(this.page, price);
-    await homeLocators.bookNowBtn(card).click();
+  roomCardByPriceText(price) {
+    return this.page.locator('.card').filter({
+      has: this.page.getByText(new RegExp(`£\\s*${price}(\\.00)?`)),
+    });
   }
 
    roomCardByPriceText(price) {
