@@ -20,6 +20,20 @@ export class HomePage {
     await homeLocators.bookNowBtn(card).click();
   }
 
+   roomCardByPriceText(price) {
+    return this.page.locator('.card').filter({
+      has: this.page.getByText(new RegExp(`£\\s*${price}(\\.00)?`)),
+    });
+  }
+
+  async clickBookNowForRoomId(id) {
+    const link = this.page
+      .getByRole('link', { name: 'Book now' })
+      .and(this.page.locator(`[href*="/reservation/${id}"]`))
+      .first();
+    await link.waitFor({ state: 'visible' });
+    await link.click({ force: true });
+  }
 
   //  Methods
 
@@ -51,6 +65,17 @@ export class HomePage {
 
   async clickreservenow() {
     await homeLocators.reservenow(this.page).click();
+  }
+
+  async getBookNowButtonByRoomId(roomId) {
+    return this.page
+      .getByRole('link', { name: 'Book now' })
+      .and(this.page.locator(`[href*="/reservation/${roomId}"]`));
+  }
+  
+  async isRoomAvailableById(roomId) {
+    const locator = await this.getBookNowButtonByRoomId(roomId);
+    return await locator.count();
   }
 
 
@@ -88,6 +113,10 @@ export class HomePage {
 
   async clickMyReservedRoom() {
     await homeLocators.myreservedRoom(this.page).click();
+  }
+
+   async isRoomAvailable(price) {
+    return await homeLocators.roomCardByPrice(this.page, price).count();
   }
 
 }
