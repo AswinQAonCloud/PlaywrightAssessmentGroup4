@@ -22,6 +22,12 @@ export class HomePage {
     });
   }
 
+   roomCardByPriceText(price) {
+    return this.page.locator('.card').filter({
+      has: this.page.getByText(new RegExp(`£\\s*${price}(\\.00)?`)),
+    });
+  }
+
   async clickBookNowForRoomId(id) {
     const link = this.page
       .getByRole('link', { name: 'Book now' })
@@ -30,6 +36,8 @@ export class HomePage {
     await link.waitFor({ state: 'visible' });
     await link.click({ force: true });
   }
+
+  //  Methods
 
   async goToAdmin() {
     await homeLocators.adminBtn(this.page).click();
@@ -107,6 +115,10 @@ export class HomePage {
 
   async clickMyReservedRoom() {
     await homeLocators.myreservedRoom(this.page).click();
+  }
+
+   async isRoomAvailable(price) {
+    return await homeLocators.roomCardByPrice(this.page, price).count();
   }
 
 }

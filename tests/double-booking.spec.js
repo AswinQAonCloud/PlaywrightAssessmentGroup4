@@ -33,14 +33,15 @@ test.describe('Prevention of conflicting (double) bookings', () => {
   
     await page.goto(ENV.baseURL);
   
-    // 🔹 First booking
+ 
+    //  First booking
     await home.selectDates(checkin, checkout);
     await home.clickCheckAvailability();
     await home.clickBookNowForRoomId(roomId);
     await booking.completeReservation(guestFirst);
     await booking.expectBookingConfirmed();
-  
-    // 🔹 Second attempt
+    
+    //  Second attempt
     await page.goto(ENV.baseURL);
     await home.selectDates(checkin, checkout);
     await home.clickCheckAvailability();

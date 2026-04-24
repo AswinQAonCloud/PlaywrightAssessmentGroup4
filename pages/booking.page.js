@@ -55,6 +55,38 @@ export class BookingPage {
     return parseInt(match[1], 10);
   }
 
+  async hasBookingError() {
+    return await bookingLocators
+      .errorBox(this.page)
+      .isVisible()
+      .catch(() => false);
+  }
+  
+  async getBookingErrorText() {
+    return await bookingLocators.errorBox(this.page).innerText();
+  }
+
+  async expectBookingConfirmed() {
+    const confirm = bookingLocators.confirmMsg(this.page);
+    const errorBox = bookingLocators.errorBox(this.page);
+  
+    // Wait for either success OR error
+    await Promise.race([
+      confirm.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {}),
+      errorBox.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {}),
+    ]);
+  
+    // If error appears → fail clearly
+    if (await errorBox.isVisible().catch(() => false)) {
+      const err = await errorBox.innerText();
+      throw new Error(`Booking failed: ${err}`);
+    }
+  
+    // Otherwise assert success
+    await expect(confirm).toBeVisible();
+  }
+
+
   /**
    * @param {{ firstname: string, lastname: string, email: string, phone: string }} guest
    */
@@ -80,5 +112,7 @@ export class BookingPage {
     await box.waitFor({ state: 'visible', timeout: 10_000 });
     return box.innerText();
   }
+
+
 
 }
