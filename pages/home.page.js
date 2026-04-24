@@ -1,3 +1,4 @@
+import { expect } from '@playwright/test';
 import { homeLocators } from './locators/homePage.locators.js';
 
 export class HomePage {
@@ -15,13 +16,20 @@ export class HomePage {
     await this.page.waitForLoadState('networkidle');
   }
 
-  async clickBookNowByPrice(price) {
-    const card = homeLocators.roomCardByPrice(this.page, price);
-    await homeLocators.bookNowBtn(card).click();
+  roomCardByPriceText(price) {
+    return this.page.locator('.card').filter({
+      has: this.page.getByText(new RegExp(`£\\s*${price}(\\.00)?`)),
+    });
   }
 
-
-  //  Methods
+  async clickBookNowForRoomId(id) {
+    const link = this.page
+      .getByRole('link', { name: 'Book now' })
+      .and(this.page.locator(`[href*="/reservation/${id}"]`))
+      .first();
+    await link.waitFor({ state: 'visible' });
+    await link.click({ force: true });
+  }
 
   async goToAdmin() {
     await homeLocators.adminBtn(this.page).click();
@@ -51,6 +59,17 @@ export class HomePage {
 
   async clickreservenow() {
     await homeLocators.reservenow(this.page).click();
+  }
+
+  async getBookNowButtonByRoomId(roomId) {
+    return this.page
+      .getByRole('link', { name: 'Book now' })
+      .and(this.page.locator(`[href*="/reservation/${roomId}"]`));
+  }
+  
+  async isRoomAvailableById(roomId) {
+    const locator = await this.getBookNowButtonByRoomId(roomId);
+    return await locator.count();
   }
 
 
