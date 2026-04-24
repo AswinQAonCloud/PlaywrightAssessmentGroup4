@@ -5,17 +5,24 @@ export class HomePage {
     this.page = page;
   }
 
-  async goToAdmin() {
-    await homeLocators.adminBtn(this.page).click();
-  }
-
-  async checkAvailability(checkin, checkout) {
+  async selectDates(checkin, checkout) {
     await homeLocators.checkin(this.page).fill(checkin);
     await homeLocators.checkout(this.page).fill(checkout);
-    await homeLocators.checkAvailability(this.page).click();
   }
 
-  async selectRoom() {
-    await homeLocators.bookNow(this.page).first().click();
+  async clickCheckAvailability() {
+    await homeLocators.checkAvailabilityBtn(this.page).click();
+    await this.page.waitForLoadState('networkidle');
   }
+
+  async clickBookNowByPrice(price) {
+    const roomCard = homeLocators.roomCard(this.page).filter({
+      has: this.page.locator(`text=£${price}`)
+    });
+
+    await roomCard
+      .locator('a', { hasText: 'Book now' })
+      .click();
+  }
+
 }

@@ -1,12 +1,11 @@
 export const adminLocators = {
-  roomNumber: (page) => page.locator('input').nth(0),
-  roomType: (page) => page.locator('input').nth(1),
-  accessible: (page) => page.locator('input').nth(2),
-  price: (page) => page.locator('input').nth(3),
-
-  createBtn: (page) => page.getByRole('button', { name: 'Create' }),
-  errorMsg: (page) => page.locator('.alert-danger'),
-
-  frontPageBtn: (page) => page.getByText('Front Page'),
-  messageTab: (page) => page.getByText('Messages'),
+  roomNumber:   (page) => page.locator('#roomName'),
+  roomType:     (page) => page.locator('#type'),
+  accessible:   (page) => page.locator('#accessible'),
+  price:        (page) => page.locator('#roomPrice'),
+  createBtn:    (page) => page.getByRole('button', { name: 'Create' }),
+  frontPageBtn: (page) => page.getByRole('link', { name: 'Front Page' }),
+  roomRows: (page) => page.locator('table tbody tr, .room-row'),
+  deleteButtons: (page) => page.locator('span.roomDelete'),
+   
 };

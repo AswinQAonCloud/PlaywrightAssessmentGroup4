@@ -5,19 +5,22 @@ export class BookingPage {
     this.page = page;
   }
 
-  async reserve(data) {
-    await bookingLocators.firstname(this.page).fill(data.firstname);
-    await bookingLocators.lastname(this.page).fill(data.lastname);
-    await bookingLocators.email(this.page).fill(data.email);
-    await bookingLocators.phone(this.page).fill(data.phone);
-    await bookingLocators.reserveBtn(this.page).click();
+  extractAmount(text) {
+    if (!text) return 0;
+    return parseInt(text.replace(/[^\d]/g, ''), 10);
   }
 
-  async getTotalPrice() {
-    return await this.page.locator('text=Total').locator('..').textContent();
+  async getTotalAmount() {
+    const text = await bookingLocators.total(this.page).textContent();
+    return this.extractAmount(text);
   }
 
-  async validateError() {
-    await this.page.waitForSelector('.alert-danger');
+  async getNights() {
+    await bookingLocators.priceSummarySection(this.page).waitFor({ state: 'visible', timeout: 6000 });
+    const text = await bookingLocators.rateLine(this.page).textContent();
+    const match = text.match(/x\s*(\d+)\s*nights?/i);
+    if (!match) throw new Error(`Could not parse nights from: "${text}"`);
+    return parseInt(match[1], 10);
   }
+
 }
