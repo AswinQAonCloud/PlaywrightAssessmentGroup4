@@ -18,6 +18,7 @@ test.describe('Booking Pricing — Admin-Created Room', () => {
     await login.login(ENV.username, ENV.password);
     await page.waitForURL('**/admin/rooms');
     await admin.deleteAllRooms();
+    await page.pause();
     await admin.createRoomAndValidate(testData.room);
   });
 
@@ -97,7 +98,7 @@ test.describe('Booking Pricing — Admin-Created Room', () => {
     expect(actual).toBe(expected);
   });
 
-  test.only('Nights shown in price summary matches selected date range', async ({ page }) => {
+  test('Nights shown in price summary matches selected date range', async ({ page }) => {
 
     const admin = new AdminPage(page);
     const home = new HomePage(page);

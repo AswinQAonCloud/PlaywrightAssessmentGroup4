@@ -14,21 +14,15 @@ export const testData = {
       checkin:  toISO(fromToday(1)),
       checkout: toISO(fromToday(2)),    // 1 night
     },
-    invalid: {
-      checkin:  toISO(fromToday(3)),
-      checkout: toISO(fromToday(1)),   // 3 nights
-    },
-    sameDay: {
+    threeNights: {
       checkin:  toISO(fromToday(1)),
-      checkout: toISO(fromToday(1)),   // 7 nights
+      checkout: toISO(fromToday(4)),   // 3 nights
+    },
+    sevenNights: {
+      checkin:  toISO(fromToday(1)),
+      checkout: toISO(fromToday(8)),   // 7 nights
     },
   },
-
-  dates: {
-  oneNight: getDateRange(1),
-  threeNights: getDateRange(3),
-  sevenNights: getDateRange(7),
-},
 
   // Fees applied by the site on every booking
   fees: {
